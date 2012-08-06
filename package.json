@@ -1,6 +1,6 @@
 {
   "name": "exchanger",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "node": "0.6.x - 0.8.x"
   },
@@ -8,8 +8,7 @@
   	"type" : "git",
   	"url" : "https://github.com/adamghill/exchanger.git"
   },
-  "bundleDependencies": [
-    "node-soap",
-    "node-expat"
-  ]
+  "dependencies": {
+  	"node-soap": "git://github.com/adamghill/node-soap.git#06fd4378d8306eeb4d8b0a7d3dfa374e6d667552"
+  }
 }
