@@ -24,7 +24,7 @@ var urlHelper = {
 }
 
 exports.initialize = function(settings, callback) {
-  var soap = require('node-soap');
+  var soap = require('soap');
   // TODO: Handle different locations of where the asmx lives.
   var endpoint = 'https://' + urlHelper.join(settings.url, 'EWS/Exchange.asmx');
   var url = path.join(__dirname, 'Services.wsdl');
