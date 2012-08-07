@@ -125,34 +125,29 @@ exports.getFolders = function(id, callback) {
     id = 'inbox';
   }
 
-  client.FindFolder({
-    'tns:FolderShape': { 
-      't:BaseShape': 'Default' 
-    }, 
-    'tns:ParentFolderIds': {
-      't:DistinguishedFolderId': { 
-        _attrs: {
-          'Id': 'inbox'
-        }
-      }
-    }
-  }, {
-    'Traversal': 'Shallow'
-  }, function(err, result) {
-    if (err) {
-      return console.log('ERROR', err);
-    }
+  var soapRequest = 
+    '<tns:FindFolder xmlns:tns="http://schemas.microsoft.com/exchange/services/2006/messages">' +
+        '<tns:FolderShape>' +
+          '<t:BaseShape>Default</t:BaseShape>' +
+        '</tns:FolderShape>' +
+        '<tns:ParentFolderIds>' + 
+          '<t:DistinguishedFolderId Id="inbox"></t:DistinguishedFolderId>' + 
+        '</tns:ParentFolderIds>' + 
+      '</tns:FindFolder>';
 
-    // console.log('RESULT', result);
+  client.FindFolder(soapRequest, function(err, result) {
+    if (err) {
+      callback(err)
+    }
     
     if (result.ResponseMessages.FindFolderResponseMessage.ResponseCode == 'NoError') {
       var rootFolder = result.ResponseMessages.FindFolderResponseMessage.RootFolder;
       
       rootFolder.Folders.Folder.forEach(function(folder) {
-        console.log(folder);
+        // console.log(folder);
       });
 
-      callback(err, {});
+      callback(null, {});
     }
   });
 }
