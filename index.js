@@ -31,18 +31,15 @@ exports.initialize = function(settings, callback) {
 
   soap.createClient(url, {}, function(err, client) {
     if (err) {
-      console.log('Error', err);
       return callback(err);
     }
     if (!client) {
-      console.log('Could not create client');
       return callback(new Error('Could not create client'));
     }
 
     this.client = client;
     // client.setEndpoint(url);
     client.setSecurity(new soap.BasicAuthSecurity(settings.username, settings.password));
-    // console.log(client);
 
     return callback(null);
   }, endpoint);
@@ -65,17 +62,17 @@ exports.getEmails = function(folderName, limit, callback) {
         '<t:BaseShape>IdOnly</t:BaseShape>' +
         '<t:AdditionalProperties>' +
           // '<t:FieldURI FieldURI="item:ItemId"></t:FieldURI>' +
-          '<t:FieldURI FieldURI="item:DateTimeCreated"></t:FieldURI>' +
-          '<t:FieldURI FieldURI="item:DateTimeSent"></t:FieldURI>' +
-          '<t:FieldURI FieldURI="item:HasAttachments"></t:FieldURI>' +
-          '<t:FieldURI FieldURI="item:Size"></t:FieldURI>' +
           // '<t:FieldURI FieldURI="item:ConversationId"></t:FieldURI>' +
-          '<t:FieldURI FieldURI="message:From"></t:FieldURI>' +
-          '<t:FieldURI FieldURI="message:IsRead"></t:FieldURI>' +
           // '<t:FieldURI FieldURI="message:ReplyTo"></t:FieldURI>' +
           // '<t:FieldURI FieldURI="message:ToRecipients"></t:FieldURI>' +
           // '<t:FieldURI FieldURI="message:CcRecipients"></t:FieldURI>' +
           // '<t:FieldURI FieldURI="message:BccRecipients"></t:FieldURI>' +
+          '<t:FieldURI FieldURI="item:DateTimeCreated"></t:FieldURI>' +
+          '<t:FieldURI FieldURI="item:DateTimeSent"></t:FieldURI>' +
+          '<t:FieldURI FieldURI="item:HasAttachments"></t:FieldURI>' +
+          '<t:FieldURI FieldURI="item:Size"></t:FieldURI>' +
+          '<t:FieldURI FieldURI="message:From"></t:FieldURI>' +
+          '<t:FieldURI FieldURI="message:IsRead"></t:FieldURI>' +
           '<t:FieldURI FieldURI="item:Importance"></t:FieldURI>' +
           '<t:FieldURI FieldURI="item:Subject"></t:FieldURI>' +
           '<t:FieldURI FieldURI="item:DateTimeReceived"></t:FieldURI>' +
@@ -89,19 +86,14 @@ exports.getEmails = function(folderName, limit, callback) {
 
   client.FindItem(soapRequest, function(err, result) {
     if (err) {
-      return console.log('ERROR', err);
+      return callback(err);
     }
-
-    // console.log('RESULT', result);
 
     if (result.ResponseMessages.FindItemResponseMessage.ResponseCode == 'NoError') {
       var rootFolder = result.ResponseMessages.FindItemResponseMessage.RootFolder;
-
-      // console.log(rootFolder);
       
       var emails = [];
       rootFolder.Items.Message.forEach(function(item, idx) {
-        console.log(item);
         emails.push({
           // id: item.ItemId,
           id: item.Subject + '-' + item.DateTimeSent,
@@ -118,8 +110,7 @@ exports.getEmails = function(folderName, limit, callback) {
 
       callback(null, emails);
     } else {
-      // badness
-      callback(result.ResponseMessages.FindItemResponseMessage.ResponseCode, {});
+      callback(new Error(result.ResponseMessages.FindItemResponseMessage.ResponseCode));
     }
   });
 }
