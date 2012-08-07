@@ -4,30 +4,11 @@ var path = require('path')
   ;
 client = null;
 
-var urlHelper = {
-  join: function(parts) {
-    var normalizedParts = [];
-
-    for (var arg in arguments) {
-      var normalizedPart = arguments[arg];
-
-      if (/\/$/.test(normalizedPart)) {
-        normalizedPart = normalizedPart.substr(0, -1);
-      }
-
-      normalizedParts.push(normalizedPart);
-
-      if (parseInt(arg) === (arguments.length - 1)) {
-        return normalizedParts.join('/');
-      }
-    }
-  }
-}
 
 exports.initialize = function(settings, callback) {
   var soap = require('soap');
   // TODO: Handle different locations of where the asmx lives.
-  var endpoint = 'https://' + urlHelper.join(settings.url, 'EWS/Exchange.asmx');
+  var endpoint = 'https://' + path.join(settings.url, 'EWS/Exchange.asmx');
   var url = path.join(__dirname, 'Services.wsdl');
 
   soap.createClient(url, {}, function(err, client) {
