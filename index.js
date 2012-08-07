@@ -39,12 +39,12 @@ exports.initialize = function(settings, callback) {
     }
 
     this.client = client;
-    // client.setEndpoint(url);
     client.setSecurity(new soap.BasicAuthSecurity(settings.username, settings.password));
 
     return callback(null);
   }, endpoint);
 }
+
 
 exports.getEmails = function(folderName, limit, callback) {
   if (typeof(folderName) === "function") {
@@ -118,6 +118,7 @@ exports.getEmails = function(folderName, limit, callback) {
     }
   });
 }
+
 
 exports.getFolders = function(id, callback) {
   if (typeof(id) == 'function') {
