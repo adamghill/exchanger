@@ -9,6 +9,7 @@
   	"url" : "https://github.com/adamghill/exchanger.git"
   },
   "dependencies": {
-  	"soap": "git://github.com/adamghill/node-soap.git"
+  	"soap": "git://github.com/adamghill/node-soap.git",
+    "moment": "1.6.2"
   }
 }
