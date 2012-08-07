@@ -1,5 +1,6 @@
 var path = require('path')
   , moment = require('moment')
+  , crypto = require('crypto')
   ;
 client = null;
 
@@ -94,9 +95,12 @@ exports.getEmails = function(folderName, limit, callback) {
       
       var emails = [];
       rootFolder.Items.Message.forEach(function(item, idx) {
+        var md5hasher = crypto.createHash('md5');
+        md5hasher.update(item.Subject + item.DateTimeSent);
+        var id = md5hasher.digest('hex');
+
         emails.push({
-          // id: item.ItemId,
-          id: item.Subject + '-' + item.DateTimeSent,
+          id: id,
           subject: item.Subject,
           dateTimeReceived: moment(item.DateTimeReceived).format("MM/DD/YYYY, h:mm:ss A"),
           niceDateTimeReceived: moment(item.DateTimeReceived).fromNow(),
