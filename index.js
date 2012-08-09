@@ -113,7 +113,45 @@ exports.getEmails = function(folderName, limit, callback) {
         callback(new Error(responseCode));
       }
     });
+  });
+}
+
+
+exports.getEmail = function(id, callback) {
+  var soapRequest = 
+    '<tns:GetItem xmlns="http://schemas.microsoft.com/exchange/services/2006/messages" xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+      '<tns:ItemShape>' +
+        '<t:BaseShape>Default</t:BaseShape>' +
+        '<t:IncludeMimeContent>true</t:IncludeMimeContent>' +
+      '</tns:ItemShape>' +
+      '<tns:ItemIds>' +
+        '<t:ItemId Id="' + id.itemId + '" ChangeKey="' + id.changeKey + '" />' +
+      '</tns:ItemIds>' +
+    '</tns:GetItem>';
+
+  client.GetItem(soapRequest, function(err, result, body) {
+    if (err) {
+      return callback(err);
     }
+
+    var parser = new xml2js.Parser();
+
+    parser.parseString(body, function(err, result) {
+      if (result['s:Body']['m:GetItemResponse']['m:ResponseMessages']['m:GetItemResponseMessage']['m:ResponseCode'] == 'NoError') {
+        var item = result['s:Body']['m:GetItemResponse']['m:ResponseMessages']['m:GetItemResponseMessage']['m:Items'];
+        var message = item['t:Message'];
+
+        console.log(message);
+
+        var email = {
+          subject: message['t:Subject'],
+        };
+
+        callback(null, email);
+      } else {
+        callback(new Error(result.ResponseMessages.GetItemResponseMessage.ResponseCode));
+      }
+    });
   });
 }
 
