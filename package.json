@@ -10,6 +10,7 @@
   },
   "dependencies": {
   	"soap": "git://github.com/adamghill/node-soap.git",
-    "moment": "1.6.2"
+    "moment": "1.6.2",
+    "xml2js": "0.1.14"
   }
 }
