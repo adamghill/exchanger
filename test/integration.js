@@ -1,91 +1,84 @@
 var assert = require('assert')
 	, _ = require('underscore')
 	, exchanger = require('../index')
+	, settings = require('./settings.js')
 	;
 
-var settings = {};
-try {
-  settings = require('./settings.js');
-} catch(err) { }
+module.exports = {
+	setUp: function(callback) {
+		exchanger.initialize(settings, function(err) {
+			if (err) throw err;
 
-if (!settings || Object.keys(settings).length === 0) {
-  throw new Error('Define an Exchange server in settings.js.');
-}
+	    callback();
+	  });
+	},
 
-function setup(callback) {
-	assert.ok(settings.username, 'Username must be set.');
-	assert.ok(settings.password, 'Password must be set.');
-	assert.ok(settings.url, 'Url must be set.');
+	validateSettings: function(test) {
+		test.ok(settings.username, 'Username must be set.');
+		test.ok(settings.password, 'Password must be set.');
+		test.ok(settings.url, 'Url must be set.');
+		test.done();
+	},
 
-	exchanger.initialize(settings, function(err) {
-		assert.ok(!err);
-
-    callback(exchanger);
-  });
-}
-
-exports.getEmails_allArgs = function() {
-	setup(function(exchanger) {
+	getEmailsWithAllArgs: function(test) {
 		exchanger.getEmails('inbox', 10, function(err, emails) {
-			assert.ok(emails);
-			assert.ok(emails.length > 0);
+			test.ok(emails);
+			test.ok(emails.length > 0);
+			test.done();
   	});
-	});
-}
+	},
 
-exports.getEmails_folderName = function() {
-	setup(function(exchanger) {
+	getEmailsWithFolderName: function(test) {
 		exchanger.getEmails('inbox', function(err, emails) {
-			assert.ok(emails);
-			assert.ok(emails.length > 0);
+			test.ok(emails);
+			test.ok(emails.length > 0);
+			test.done();
   	});
-	});
-}
+	},
 
-exports.getEmails_callback = function() {
-	setup(function(exchanger) {
+	getEmailsWithCallback: function(test) {
 		exchanger.getEmails(function(err, emails) {
-			assert.ok(emails);
-			assert.ok(emails.length > 0);
-  	});
-	});
-}
+			test.ok(emails);
+			test.ok(emails.length > 0);
+			test.done();
+		});
+	},
 
-exports.getEmails_id_set = function() {
-	setup(function(exchanger) {
+	getEmailsIdSet: function(test) {
 		exchanger.getEmails(function(err, emails) {
-			assert.ok(emails.length > 0);
+			test.ok(emails.length > 0);
 
 			emails.forEach(function(item, idx) {
-				assert.ok(item.id);
+				test.ok(item.id);
 
-				assert.ok(item.id.split('|').length === 2)
+				test.ok(item.id.split('|').length === 2)
 				var itemId = item.id.split('|')[0];
 				var changeKey = item.id.split('|')[1];
 
-				assert.ok(itemId);
-				assert.ok(changeKey);
+				test.ok(itemId);
+				test.ok(changeKey);
+
+				if (idx === (emails.length - 1)) {
+					test.done();
+				}
 			});
   	});
-	});
-}
+	},
 
-exports.getEmail_id = function() {
-	setup(function(exchanger) {
+	getEmailWithId: function(test) {
 		var id = {
 			itemId: settings.itemId,
 			changeKey: settings.changeKey
 		};
 
 		exchanger.getEmail(id, function(err, email) {
-			assert.ok(!err);
-			assert.ok(email);
+			test.ok(!err);
+			test.ok(email);
+			test.done();
   	});
-	});
-}
+	},
 
-exports.getEmail_mailboxes_set = function() {
-	setup(function(exchanger) {
+	getEmailMailboxesSet: function(test) {
 		var id = {
 			itemId: settings.itemId,
 			changeKey: settings.changeKey
@@ -94,21 +87,20 @@ exports.getEmail_mailboxes_set = function() {
 		exchanger.getEmail(id, function(err, email) {
 			var mailboxTypes = [email.toRecipients, email.ccRecipients, email.from];
 			
-			_.forEach(mailboxTypes, function(m) {
-				assert.ok(m.length > 0);
+			_.forEach(mailboxTypes, function(m, idx) {
+				test.ok(m instanceof Array);
+				test.ok(m.length > 0);
 
-				_.forEach(m, function(i) {
-					assert.ok(i.name);
-					assert.ok(i.emailAddress);
+				_.forEach(m, function(i, idx2) {
+					test.ok(i.name);
+					test.ok(i.emailAddress);
+
+					if (idx === (mailboxTypes.length - 1) && idx2 === (m.length - 1)) {
+						test.done();
+					}
 				})
 			})
   	});
-	});
-}
+	},
 
-this.getEmails_allArgs();
-this.getEmails_folderName();
-this.getEmails_callback();
-this.getEmails_id_set();
-this.getEmail_id();
-this.getEmail_mailboxes_set();
+};
