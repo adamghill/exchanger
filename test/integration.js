@@ -22,6 +22,7 @@ module.exports = {
 
 	getEmailsWithAllArgs: function(test) {
 		exchanger.getEmails('inbox', 10, function(err, emails) {
+			test.ifError(err);
 			test.ok(emails);
 			test.ok(emails.length > 0);
 			test.done();
@@ -30,6 +31,7 @@ module.exports = {
 
 	getEmailsWithFolderName: function(test) {
 		exchanger.getEmails('inbox', function(err, emails) {
+			test.ifError(err);
 			test.ok(emails);
 			test.ok(emails.length > 0);
 			test.done();
@@ -38,6 +40,7 @@ module.exports = {
 
 	getEmailsWithCallback: function(test) {
 		exchanger.getEmails(function(err, emails) {
+			test.ifError(err);
 			test.ok(emails);
 			test.ok(emails.length > 0);
 			test.done();
@@ -65,26 +68,34 @@ module.exports = {
   	});
 	},
 
-	getEmailWithId: function(test) {
-		var id = {
-			itemId: settings.itemId,
-			changeKey: settings.changeKey
-		};
-
-		exchanger.getEmail(id, function(err, email) {
-			test.ok(!err);
+	getEmailWithItemId: function(test) {
+		exchanger.getEmail(settings.itemId, function(err, email) {
+			test.ifError(err);
 			test.ok(email);
 			test.done();
   	});
 	},
 
-	getEmailMailboxesSet: function(test) {
-		var id = {
-			itemId: settings.itemId,
-			changeKey: settings.changeKey
-		};
-
+	getEmailWithId: function(test) {
+		var id = settings.itemId.id + "|" + settings.itemId.changeKey;
 		exchanger.getEmail(id, function(err, email) {
+			test.ifError(err);
+			test.ok(email);
+			test.done();
+  	});
+	},
+
+	getEmailWithInvalidId: function(test) {
+		var id = "blob";
+		exchanger.getEmail(id, function(err, email) {
+			test.ok(err);
+			test.ifError(email);
+			test.done();
+  	});
+	},
+
+	getEmailMailboxesSet: function(test) {
+		exchanger.getEmail(settings.itemId, function(err, email) {
 			var mailboxTypes = [email.toRecipients, email.ccRecipients, email.from];
 			
 			_.forEach(mailboxTypes, function(m, idx) {

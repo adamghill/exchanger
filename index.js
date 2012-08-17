@@ -77,48 +77,61 @@ exports.getEmails = function(folderName, limit, callback) {
     parser.parseString(body, function(err, result) {
       var responseCode = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:ResponseCode'];
 
-      if (responseCode == 'NoError') {
-        var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
-        
-        var emails = [];
-        rootFolder['t:Items']['t:Message'].forEach(function(item, idx) {
-          var md5hasher = crypto.createHash('md5');
-          md5hasher.update(item['t:Subject'] + item['t:DateTimeSent']);
-          var hash = md5hasher.digest('hex');
-
-          var itemId = {
-            id: item['t:ItemId']['@'].Id,
-            changeKey: item['t:ItemId']['@'].ChangeKey
-          };
-          var dateTimeReceived = item['t:DateTimeReceived'];
-
-          emails.push({
-            id: itemId.id + '|' + itemId.changeKey,
-            hash: hash,
-            subject: item['t:Subject'],
-            dateTimeReceived: moment(dateTimeReceived).format("MM/DD/YYYY, h:mm:ss A"),
-            niceDateTimeReceived: moment(dateTimeReceived).fromNow(),
-            size: item['t:Size'],
-            importance: item['t:Importance'],
-            hasAttachments: (item['t:HasAttachments'] === 'true'),
-            from: item['t:From']['t:Mailbox']['t:Name'],
-            isRead: (item['t:IsRead'] === 'true'),
-            meta: {
-              itemId: itemId
-            }
-          });
-        });
-
-        callback(null, emails);
-      } else {
-        callback(new Error(responseCode));
+      if (responseCode !== 'NoError') {
+        return callback(new Error(responseCode));
       }
+        
+      var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
+      
+      var emails = [];
+      rootFolder['t:Items']['t:Message'].forEach(function(item, idx) {
+        var md5hasher = crypto.createHash('md5');
+        md5hasher.update(item['t:Subject'] + item['t:DateTimeSent']);
+        var hash = md5hasher.digest('hex');
+
+        var itemId = {
+          id: item['t:ItemId']['@'].Id,
+          changeKey: item['t:ItemId']['@'].ChangeKey
+        };
+
+        var dateTimeReceived = item['t:DateTimeReceived'];
+
+        emails.push({
+          id: itemId.id + '|' + itemId.changeKey,
+          hash: hash,
+          subject: item['t:Subject'],
+          dateTimeReceived: moment(dateTimeReceived).format("MM/DD/YYYY, h:mm:ss A"),
+          size: item['t:Size'],
+          importance: item['t:Importance'],
+          hasAttachments: (item['t:HasAttachments'] === 'true'),
+          from: item['t:From']['t:Mailbox']['t:Name'],
+          isRead: (item['t:IsRead'] === 'true'),
+          meta: {
+            itemId: itemId
+          }
+        });
+      });
+
+      callback(null, emails);
     });
   });
 }
 
 
-exports.getEmail = function(id, callback) {
+exports.getEmail = function(itemId, callback) {
+  if ((!itemId['id'] || !itemId['changeKey']) && itemId.indexOf('|') > 0) {
+    var s = itemId.split('|');
+
+    itemId = {
+      id: itemId.split('|')[0],
+      changeKey: itemId.split('|')[1]
+    };
+  }
+
+  if (!itemId.id || !itemId.changeKey) {
+    return callback(new Error('Id is not correct.'));
+  }
+
   var soapRequest = 
     '<tns:GetItem xmlns="http://schemas.microsoft.com/exchange/services/2006/messages" xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
       '<tns:ItemShape>' +
@@ -126,7 +139,7 @@ exports.getEmail = function(id, callback) {
         '<t:IncludeMimeContent>true</t:IncludeMimeContent>' +
       '</tns:ItemShape>' +
       '<tns:ItemIds>' +
-        '<t:ItemId Id="' + id.itemId + '" ChangeKey="' + id.changeKey + '" />' +
+        '<t:ItemId Id="' + itemId.id + '" ChangeKey="' + itemId.changeKey + '" />' +
       '</tns:ItemIds>' +
     '</tns:GetItem>';
 
@@ -138,62 +151,62 @@ exports.getEmail = function(id, callback) {
     var parser = new xml2js.Parser();
 
     parser.parseString(body, function(err, result) {
-      if (result['s:Body']['m:GetItemResponse']['m:ResponseMessages']['m:GetItemResponseMessage']['m:ResponseCode'] == 'NoError') {
-        var item = result['s:Body']['m:GetItemResponse']['m:ResponseMessages']['m:GetItemResponseMessage']['m:Items']['t:Message'];
+      var responseCode = result['s:Body']['m:GetItemResponse']['m:ResponseMessages']['m:GetItemResponseMessage']['m:ResponseCode'];
 
-        // console.log(message);
+      if (responseCode !== 'NoError') {
+        return callback(new Error(responseCode));
+      }
+       
+      var item = result['s:Body']['m:GetItemResponse']['m:ResponseMessages']['m:GetItemResponseMessage']['m:Items']['t:Message'];
 
-        var itemId = {
-          id: item['t:ItemId']['@'].Id,
-          changeKey: item['t:ItemId']['@'].ChangeKey
-        };
+      var itemId = {
+        id: item['t:ItemId']['@'].Id,
+        changeKey: item['t:ItemId']['@'].ChangeKey
+      };
 
-        function handleMailbox(mailbox) {
-          var mailboxes = [];
+      function handleMailbox(mailbox) {
+        var mailboxes = [];
 
-          function getMailboxObj(mailboxItem) {
-            return {
-              name: mailboxItem['t:Name'],
-              emailAddress: mailboxItem['t:EmailAddress']
-            };
-          }
-
-          if (mailbox instanceof Array) {
-            mailbox.forEach(function(m, idx) {
-              mailboxes.push(getMailboxObj(m));
-            })
-          } else {
-            mailboxes.push(getMailboxObj(mailbox));
-          }
-
-          return mailboxes;
+        function getMailboxObj(mailboxItem) {
+          return {
+            name: mailboxItem['t:Name'],
+            emailAddress: mailboxItem['t:EmailAddress']
+          };
         }
 
-        var toRecipients = handleMailbox(item['t:ToRecipients']['t:Mailbox']);
-        var ccRecipients = handleMailbox(item['t:CcRecipients']['t:Mailbox']);
-        var from = handleMailbox(item['t:From']['t:Mailbox']);
+        if (mailbox instanceof Array) {
+          mailbox.forEach(function(m, idx) {
+            mailboxes.push(getMailboxObj(m));
+          })
+        } else {
+          mailboxes.push(getMailboxObj(mailbox));
+        }
 
-        var email = {
-          id: itemId.id + '|' + itemId.changeKey,
-          subject: item['t:Subject'],
-          bodyType: item['t:Body']['@']['t:BodyType'],
-          body: item['t:Body']['#'],
-          size: item['t:Size'],
-          dateTimeSent: item['t:DateTimeSent'],
-          dateTimeCreated: item['t:DateTimeCreated'],
-          toRecipients: toRecipients,
-          ccRecipients: ccRecipients,
-          from: from,
-          isRead: (item['t:IsRead'] == 'true') ? true : false,
-          meta: {
-            itemId: itemId
-          }
-        };
-
-        callback(null, email);
-      } else {
-        callback(new Error(result.ResponseMessages.GetItemResponseMessage.ResponseCode));
+        return mailboxes;
       }
+
+      var toRecipients = handleMailbox(item['t:ToRecipients']['t:Mailbox']);
+      var ccRecipients = handleMailbox(item['t:CcRecipients']['t:Mailbox']);
+      var from = handleMailbox(item['t:From']['t:Mailbox']);
+
+      var email = {
+        id: itemId.id + '|' + itemId.changeKey,
+        subject: item['t:Subject'],
+        bodyType: item['t:Body']['@']['t:BodyType'],
+        body: item['t:Body']['#'],
+        size: item['t:Size'],
+        dateTimeSent: item['t:DateTimeSent'],
+        dateTimeCreated: item['t:DateTimeCreated'],
+        toRecipients: toRecipients,
+        ccRecipients: ccRecipients,
+        from: from,
+        isRead: (item['t:IsRead'] == 'true') ? true : false,
+        meta: {
+          itemId: itemId
+        }
+      };
+
+      callback(null, email);
     });
   });
 }
