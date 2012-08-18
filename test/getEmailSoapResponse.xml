@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header>
+    <h:ServerVersionInfo MajorVersion="14" MinorVersion="1" MajorBuildNumber="269" MinorBuildNumber="0" xmlns:h="http://schemas.microsoft.com/exchange/services/2006/types" xmlns="http://schemas.microsoft.com/exchange/services/2006/types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+  </s:Header>
+  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <m:GetItemResponse xmlns:m="http://schemas.microsoft.com/exchange/services/2006/messages" xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">
+      <m:ResponseMessages>
+        <m:GetItemResponseMessage ResponseClass="Success">
+          <m:ResponseCode>NoError</m:ResponseCode>
+          <m:Items>
+            <t:Message>
+              <t:MimeContent CharacterSet="UTF-8">+MIME==</t:MimeContent>
+              <t:ItemId Id="USKJFKFJKDM<MCCCLdpriiMqRKqMrQcEUFOUYHADiccxzRARSSrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RKJSJHS0tXCUAAA==" ChangeKey="CQNHDHDHBSfhvIT4JDSo33XYNHfEJKHGGFfhbJHJd" />
+              <t:Subject>Email Subject</t:Subject>
+              <t:Sensitivity>Normal</t:Sensitivity>
+              <t:Body BodyType="HTML">&lt;html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40"&gt;
+ &lt;body lang="EN-US" link="blue" vlink="purple"&gt;
+ &lt;/body&gt;
+ &lt;/html&gt;
+</t:Body>
+              <t:Attachments>
+                <t:FileAttachment>
+                  <t:AttachmentId Id="AAAOAGFoaWxsQGZvb2wuY29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RVQAAS0tXCUAAAEGAAQAAAAAAA==" />
+                  <t:Name>image001.jpg</t:Name>
+                  <t:ContentType>image/jpeg</t:ContentType>
+                  <t:ContentId>image001.jpg@01JIDJN.6R5K8900</t:ContentId>
+                  <t:ContentId>image001.jpg@01JIDJN.6R5K8900</t:ContentId>
+                </t:FileAttachment>
+              </t:Attachments>
+              <t:Size>12086</t:Size>
+              <t:DateTimeSent>2012-08-08T01:05:56Z</t:DateTimeSent>
+              <t:DateTimeCreated>2012-08-08T01:05:57Z</t:DateTimeCreated>
+              <t:ResponseObjects>
+                <t:ReplyToItem />
+                <t:ReplyAllToItem />
+                <t:ForwardItem />
+              </t:ResponseObjects>
+              <t:HasAttachments>false</t:HasAttachments>
+              <t:ToRecipients>
+                <t:Mailbox>
+                  <t:Name>Joe Shmoe</t:Name>
+                  <t:EmailAddress>jshmoe@example.com</t:EmailAddress>
+                  <t:RoutingType>SMTP</t:RoutingType>
+                </t:Mailbox>
+                <t:Mailbox>
+                  <t:Name>Jane Doe</t:Name>
+                  <t:EmailAddress>jdoe@example.com</t:EmailAddress>
+                  <t:RoutingType>SMTP</t:RoutingType>
+                </t:Mailbox>
+              </t:ToRecipients>
+              <t:CcRecipients>
+                <t:Mailbox>
+                  <t:Name>Boss Lady</t:Name>
+                  <t:EmailAddress>boss@example.com</t:EmailAddress>
+                  <t:RoutingType>SMTP</t:RoutingType>
+                </t:Mailbox>
+              </t:CcRecipients>
+              <t:IsReadReceiptRequested>false</t:IsReadReceiptRequested>
+              <t:IsDeliveryReceiptRequested>false</t:IsDeliveryReceiptRequested>
+              <t:From>
+                <t:Mailbox>
+                  <t:Name>Under Ling</t:Name>
+                  <t:EmailAddress>uling@example.com</t:EmailAddress>
+                  <t:RoutingType>SMTP</t:RoutingType>
+                </t:Mailbox>
+              </t:From>
+              <t:IsRead>true</t:IsRead>
+            </t:Message>
+          </m:Items>
+        </m:GetItemResponseMessage>
+      </m:ResponseMessages>
+    </m:GetItemResponse>
+  </s:Body>
+</s:Envelope>

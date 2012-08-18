@@ -3,7 +3,9 @@ var path = require('path')
   , crypto = require('crypto')
   , xml2js = require('xml2js')
   ;
-client = null;
+
+
+exports.client = null;
 
 
 exports.initialize = function(settings, callback) {
@@ -20,8 +22,8 @@ exports.initialize = function(settings, callback) {
       return callback(new Error('Could not create client'));
     }
 
-    this.client = client;
-    client.setSecurity(new soap.BasicAuthSecurity(settings.username, settings.password));
+    exports.client = client;
+    exports.client.setSecurity(new soap.BasicAuthSecurity(settings.username, settings.password));
 
     return callback(null);
   }, endpoint);
@@ -37,6 +39,9 @@ exports.getEmails = function(folderName, limit, callback) {
   if (typeof(limit) === "function") {
     callback = limit;
     limit = 10;
+  }
+  if (!exports.client) {
+    return callback(new Error('Call initialize()'));
   }
 
   var soapRequest = 
@@ -67,7 +72,7 @@ exports.getEmails = function(folderName, limit, callback) {
       '</tns:ParentFolderIds>' + 
     '</tns:FindItem>';
 
-  client.FindItem(soapRequest, function(err, result, body) {
+  exports.client.FindItem(soapRequest, function(err, result, body) {
     if (err) {
       return callback(err);
     }
@@ -119,6 +124,9 @@ exports.getEmails = function(folderName, limit, callback) {
 
 
 exports.getEmail = function(itemId, callback) {
+  if (!exports.client) {
+    return callback(new Error('Call initialize()'))
+  }
   if ((!itemId['id'] || !itemId['changeKey']) && itemId.indexOf('|') > 0) {
     var s = itemId.split('|');
 
@@ -143,7 +151,7 @@ exports.getEmail = function(itemId, callback) {
       '</tns:ItemIds>' +
     '</tns:GetItem>';
 
-  client.GetItem(soapRequest, function(err, result, body) {
+  exports.client.GetItem(soapRequest, function(err, result, body) {
     if (err) {
       return callback(err);
     }
@@ -228,7 +236,7 @@ exports.getFolders = function(id, callback) {
         '</tns:ParentFolderIds>' + 
       '</tns:FindFolder>';
 
-  client.FindFolder(soapRequest, function(err, result) {
+  exports.client.FindFolder(soapRequest, function(err, result) {
     if (err) {
       callback(err)
     }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header>
+    <h:ServerVersionInfo MajorVersion="14" MinorVersion="1" MajorBuildNumber="269" MinorBuildNumber="0" xmlns:h="http://schemas.microsoft.com/exchange/services/2006/types" xmlns="http://schemas.microsoft.com/exchange/services/2006/types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+  </s:Header>
+  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <m:FindItemResponse xmlns:m="http://schemas.microsoft.com/exchange/services/2006/messages" xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">
+      <m:ResponseMessages>
+        <m:FindItemResponseMessage ResponseClass="Success">
+          <m:ResponseCode>NoError</m:ResponseCode>
+          <m:RootFolder IndexedPagingOffset="10" TotalItemsInView="4444" IncludesLastItemInRange="false">
+            <t:Items>
+              <t:Message>
+                <t:ItemId Id="AAAOAGFoaWxsQGZvb2wuY29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0KHKJH89dsf==" ChangeKey="CQAAABYAAADRfhvIT4JDSo33XYNHfEVUAAEtMvlv" /> <t:Subject>Subject 1</t:Subject>
+                <t:DateTimeReceived>2012-08-18T02:14:44Z</t:DateTimeReceived>
+                <t:Size>7640</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-18T02:14:41Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-18T02:14:44Z</t:DateTimeCreated>
+                <t:HasAttachments>false</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Joe Shmoe</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>false</t:IsRead>
+              </t:Message>
+              <t:Message>
+                <t:ItemId Id="AAAOAGFoaWxsQGZvb2wuY29tAEYAAAAAAALdpriiMqRKqMrQcJKHJKYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RVQAAS0tXcMAAA==" ChangeKey="CQAAABYAAKJHKJHKJGVGTDTDGFUAAEtMvcX" />
+                <t:Subject>Subject 2</t:Subject>
+                <t:DateTimeReceived>2012-08-17T22:29:19Z</t:DateTimeReceived>
+                <t:Size>32716</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-17T22:28:33Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-17T22:29:19Z</t:DateTimeCreated>
+                <t:HasAttachments>false</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Jane Doe</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>true</t:IsRead>
+              </t:Message>
+              <t:Message>
+                <t:ItemId Id="LKJKLJKLJsdjksjKLJKLJLK29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RVQAAS0tXb4AAA==" ChangeKey="CQAAAKJHKJHKJHfhvIT4JDSo33XYNHfEVUAAEtMvQG" />
+                <t:Subject>Subject 3</t:Subject>
+                <t:DateTimeReceived>2012-08-17T19:02:15Z</t:DateTimeReceived>
+                <t:Size>3706523</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-17T19:02:13Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-17T19:02:15Z</t:DateTimeCreated>
+                <t:HasAttachments>true</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Subject 3</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>true</t:IsRead>
+              </t:Message>
+              <t:Message>
+                <t:ItemId Id="KLJKDLkljkljkdsjf99KJKLJKLJLKJ29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RVQAAS0tXb0AAA==" ChangeKey="CQANDJKHKDJHDhvIT4JDSo387KJHJNHfEVUAAEtMvUX" />
+                <t:Subject>Subject 4</t:Subject>
+                <t:DateTimeReceived>2012-08-17T19:01:46Z</t:DateTimeReceived>
+                <t:Size>3492</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-17T19:01:44Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-17T19:01:46Z</t:DateTimeCreated>
+                <t:HasAttachments>false</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Mailbox 4</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>true</t:IsRead>
+              </t:Message>
+              <t:Message>
+                <t:ItemId Id="AAAOAGFo8dfdsk399KKJHwuY29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RVQAAS0tXbUAAA==" ChangeKey="CQAKKLJDDsDRfhvIT4JDSo33XYNHfEVUAAEtMvJZ" />
+                <t:Subject>Subject 5</t:Subject>
+                <t:DateTimeReceived>2012-08-17T18:05:11Z</t:DateTimeReceived>
+                <t:Size>1340</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-17T18:05:10Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-17T18:05:11Z</t:DateTimeCreated>
+                <t:HasAttachments>false</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Mailbox 5</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>true</t:IsRead>
+              </t:Message>
+              <t:Message>
+                <t:ItemId Id="KJHKJSHSoaWxsQGZvb2wuY29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzJSKJkjKJ+DHJDKJHDhdhjs878sjshsd8RVQAAS0tXbQAAA==" ChangeKey="KJDKJDAAADRfhvIT4JDSo33XYNHfEVUAAEt87HJHKJ" />
+                <t:Subject>Subject 6</t:Subject>
+                <t:DateTimeReceived>2012-08-17T17:22:47Z</t:DateTimeReceived>
+                <t:Size>58502</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-17T17:22:46Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-17T17:22:47Z</t:DateTimeCreated>
+                <t:HasAttachments>false</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Maibox 6</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>true</t:IsRead>
+              </t:Message>
+              <t:MeetingRequest>
+                <t:ItemId Id="LKJFLKDJoaWxsQGZvb2wuY29tAEYAAAAAAALdpriiMqRKqMrQcEUFOUYHADiccxzPUBFLrOkEJ699ewcAAABDwzkAANF+G8hPgkNKjfddg0d8RVQAAS0tXbMAAA==" ChangeKey="LKFJFLKFDRfhvIT4JDSo33XYNHfEVUAAEtMvSX" />
+                <t:Subject>Meeting Request 1</t:Subject>
+                <t:DateTimeReceived>2012-08-17T17:15:23Z</t:DateTimeReceived>
+                <t:Size>6708</t:Size>
+                <t:Importance>Normal</t:Importance>
+                <t:DateTimeSent>2012-08-17T17:15:09Z</t:DateTimeSent>
+                <t:DateTimeCreated>2012-08-17T17:15:23Z</t:DateTimeCreated>
+                <t:HasAttachments>false</t:HasAttachments>
+                <t:From>
+                  <t:Mailbox>
+                    <t:Name>Boss Lady</t:Name>
+                  </t:Mailbox>
+                </t:From>
+                <t:IsRead>true</t:IsRead>
+              </t:MeetingRequest>
+            </t:Items>
+          </m:RootFolder>
+        </m:FindItemResponseMessage>
+      </m:ResponseMessages>
+    </m:FindItemResponse>
+  </s:Body>
+</s:Envelope>
