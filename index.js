@@ -175,6 +175,11 @@ exports.getEmail = function(itemId, callback) {
       function handleMailbox(mailbox) {
         var mailboxes = [];
 
+        if (!mailbox || !mailbox['t:Mailbox']) {
+          return mailboxes;
+        }
+        mailbox = mailbox['t:Mailbox'];
+
         function getMailboxObj(mailboxItem) {
           return {
             name: mailboxItem['t:Name'],
@@ -193,9 +198,9 @@ exports.getEmail = function(itemId, callback) {
         return mailboxes;
       }
 
-      var toRecipients = handleMailbox(item['t:ToRecipients']['t:Mailbox']);
-      var ccRecipients = handleMailbox(item['t:CcRecipients']['t:Mailbox']);
-      var from = handleMailbox(item['t:From']['t:Mailbox']);
+      var toRecipients = handleMailbox(item['t:ToRecipients']);
+      var ccRecipients = handleMailbox(item['t:CcRecipients']);
+      var from = handleMailbox(item['t:From']);
 
       var email = {
         id: itemId.id + '|' + itemId.changeKey,
