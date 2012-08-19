@@ -1,6 +1,9 @@
 {
   "name": "exchanger",
-  "version": "0.0.6",
+  "version": "0.1.0",
+  "author": "Adam Hill <adamghill@yahoo.com>",
+  "description": "Query Exchange Web Services",
+  "license": "MIT",
   "engines": {
     "node": "0.8.x"
   },
@@ -8,6 +11,15 @@
   	"type" : "git",
   	"url" : "https://github.com/adamghill/exchanger.git"
   },
+  "keywords": [
+    "exchange",
+    "ews",
+    "exchange web services",
+    "outlook",
+    "outlook web app",
+    "owa",
+    "email",
+  ],
   "dependencies": {
   	"soap": "git://github.com/adamghill/node-soap.git",
     "moment": "1.6.2",
@@ -16,5 +28,8 @@
   },
   "dev-dependencies": {
     "nodeunit": "0.7.4"
+  },
+  "scripts": {
+    "test": "nodeunit test"
   }
 }
