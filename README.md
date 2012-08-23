@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/adamghill/exchanger.png)](http://travis-ci.org/adamghill/exchanger)
 Query Microsoft's Exchange Web Services. Only tested on Microsoft Exchange 2010.
 
 ##Install
