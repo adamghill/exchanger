@@ -14,7 +14,7 @@ npm install exchanger
 
 ``` javascript
   var exchanger = require('exchanger');
-  retriever.initialize({ url: 'webmail.example.com', username: 'username', password: 'password' }, function(err) {
+  exchanger.initialize({ url: 'webmail.example.com', username: 'username', password: 'password' }, function(err) {
     console.log('Initialized!');
   });
 ```
@@ -23,7 +23,7 @@ npm install exchanger
 
 ``` javascript
   var exchanger = require('exchanger');
-  retriever.initialize({ url: 'webmail.example.com', username: 'username', password: 'password' }, function(err) {
+  exchanger.initialize({ url: 'webmail.example.com', username: 'username', password: 'password' }, function(err) {
     exchanger.getEmails('inbox', 50, function(err, emails) {
       console.log(emails);
     });
