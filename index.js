@@ -1,9 +1,10 @@
+// @target Exchange Web Services 2010
+
 var path = require('path')
   , moment = require('moment')
   , crypto = require('crypto')
   , xml2js = require('xml2js')
   ;
-
 
 exports.client = null;
 
@@ -80,41 +81,64 @@ exports.getEmails = function(folderName, limit, callback) {
     var parser = new xml2js.Parser();
 
     parser.parseString(body, function(err, result) {
-      var responseCode = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:ResponseCode'];
+      // var responseCode = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:ResponseCode'];
+      var responseCode = result['s:Envelope']['s:Body'][0]['m:FindItemResponse'][0]['m:ResponseMessages'][0]['m:FindItemResponseMessage'][0]['m:ResponseCode'];
 
-      if (responseCode !== 'NoError') {
+      // if (responseCode !== 'NoError') {
+      if (responseCode[0] !== 'NoError') {
         return callback(new Error(responseCode));
       }
         
-      var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
-      
+      // var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
+      var rootFolder = result['s:Envelope']['s:Body'][0]['m:FindItemResponse'][0]['m:ResponseMessages'][0]['m:FindItemResponseMessage'][0]['m:RootFolder'][0];
+
       var emails = [];
-      rootFolder['t:Items']['t:Message'].forEach(function(item, idx) {
+      // rootFolder['t:Items']['t:Message'].forEach(function(item, idx) {
+      rootFolder['t:Items'][0]['t:Message'].forEach(function(item, idx) {
         var md5hasher = crypto.createHash('md5');
+
         md5hasher.update(item['t:Subject'] + item['t:DateTimeSent']);
         var hash = md5hasher.digest('hex');
 
         var itemId = {
-          id: item['t:ItemId']['@'].Id,
-          changeKey: item['t:ItemId']['@'].ChangeKey
+          // id: item['t:ItemId']['@'].Id,
+          // changeKey: item['t:ItemId']['@'].ChangeKey
+          id: item['t:ItemId'][0]['$'].Id,
+          changeKey: item['t:ItemId'][0]['$'].ChangeKey
         };
 
-        var dateTimeReceived = item['t:DateTimeReceived'];
+        // var dateTimeReceived = item['t:DateTimeReceived'];
+        var dateTimeReceived = item['t:DateTimeReceived'][0];
 
-        emails.push({
+        var email_item = {
           id: itemId.id + '|' + itemId.changeKey,
           hash: hash,
-          subject: item['t:Subject'],
+
+          // subject: item['t:Subject'],
+          subject: item['t:Subject'][0],
+
           dateTimeReceived: moment(dateTimeReceived).format("MM/DD/YYYY, h:mm:ss A"),
-          size: item['t:Size'],
-          importance: item['t:Importance'],
-          hasAttachments: (item['t:HasAttachments'] === 'true'),
-          from: item['t:From']['t:Mailbox']['t:Name'],
-          isRead: (item['t:IsRead'] === 'true'),
+
+          // size: item['t:Size'],
+          size: item['t:Size'][0],
+
+          // importance: item['t:Importance'],
+          importance: item['t:Importance'][0],
+
+          // hasAttachments: (item['t:HasAttachments'] === 'true'),
+          hasAttachments: (item['t:HasAttachments'][0] === 'true'),
+
+          // from: item['t:From']['t:Mailbox']['t:Name'],
+          from: item['t:From'][0]['t:Mailbox'][0]['t:Name'][0],
+
+          // isRead: (item['t:IsRead'] === 'true'),
+          isRead: (item['t:IsRead'] === 'true')[0],
+
           meta: {
             itemId: itemId
           }
-        });
+        };
+        emails.push(email_item);
       });
 
       callback(null, emails);
