@@ -337,7 +337,7 @@ exports.getCalendarItems = function(folderName, limit, callback) {
           var dateTimeReceived = item['t:DateTimeReceived'];
 
           calendarItems.push({
-            id: itemId,
+            exchangeId: itemId,
             subject: item['t:Subject'],
             start: item['t:Start'],
             end: item['t:End']
