@@ -327,29 +327,41 @@ exports.getCalendarItems = function(folderName, limit, callback) {
         var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
       
         var calendarItems = [];
-        
+        var rawCalendarItems =[];
+
         if(rootFolder['t:Items']){
           if (rootFolder['t:Items']['t:CalendarItem']){
-            rootFolder['t:Items']['t:CalendarItem'].forEach(function(item, idx) {
+            rawCalendarItems = rootFolder['t:Items']['t:CalendarItem'];
+            if(Array.isArray(rawCalendarItems)){
+              rawCalendarItems.forEach(function(item, idx) {
+                var itemId = {
+                  id: item['t:ItemId']['@'].Id,
+                  changeKey: item['t:ItemId']['@'].ChangeKey
+                };
+
+                var dateTimeReceived = item['t:DateTimeReceived'];
+
+                calendarItems.push({
+                  exchangeId: itemId,
+                  subject: item['t:Subject'],
+                  start: item['t:Start'],
+                  end: item['t:End']
+                });           
+              });
+            }else{
+              //rawCalendarItems is a single object
               var itemId = {
-                id: item['t:ItemId']['@'].Id,
-                changeKey: item['t:ItemId']['@'].ChangeKey
-              };
-
-              var dateTimeReceived = item['t:DateTimeReceived'];
-
+                  id: rawCalendarItems['t:ItemId']['@'].Id,
+                  changeKey: rawCalendarItems['t:ItemId']['@'].ChangeKey
+                };
               calendarItems.push({
                 exchangeId: itemId,
-                subject: item['t:Subject'],
-                start: item['t:Start'],
-                end: item['t:End']
-              });           
-            });
-          }else{
-            calendarItems = [];
+                subject: rawCalendarItems['t:Subject'],
+                start: rawCalendarItems['t:Start'],
+                end: rawCalendarItems['t:End']
+              });   
+            }
           }
-        }else{
-          calendarItems = [];
         }
         callback(null, calendarItems);
       });
