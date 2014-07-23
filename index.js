@@ -327,22 +327,30 @@ exports.getCalendarItems = function(folderName, limit, callback) {
         var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
       
         var calendarItems = [];
-        rootFolder['t:Items']['t:CalendarItem'].forEach(function(item, idx) {
+        
+        if(rootFolder['t:Items']){
+          if (rootFolder['t:Items']['t:CalendarItem']){
+            rootFolder['t:Items']['t:CalendarItem'].forEach(function(item, idx) {
+              var itemId = {
+                id: item['t:ItemId']['@'].Id,
+                changeKey: item['t:ItemId']['@'].ChangeKey
+              };
 
-          var itemId = {
-            id: item['t:ItemId']['@'].Id,
-            changeKey: item['t:ItemId']['@'].ChangeKey
-          };
+              var dateTimeReceived = item['t:DateTimeReceived'];
 
-          var dateTimeReceived = item['t:DateTimeReceived'];
-
-          calendarItems.push({
-            exchangeId: itemId,
-            subject: item['t:Subject'],
-            start: item['t:Start'],
-            end: item['t:End']
-          });           
-        });
+              calendarItems.push({
+                exchangeId: itemId,
+                subject: item['t:Subject'],
+                start: item['t:Start'],
+                end: item['t:End']
+              });           
+            });
+          }else{
+            calendarItems = [];
+          }
+        }else{
+          calendarItems = [];
+        }
         callback(null, calendarItems);
       });
     });
