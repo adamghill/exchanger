@@ -306,7 +306,7 @@ exports.getCalendarItems = function(folderName, limit, start, end, callback) {
             '<t:FieldURI FieldURI="calendar:End" />' +
           '</t:AdditionalProperties>' +
         '</tns:ItemShape>' +
-        '<tns:CalendarView MaxEntriesReturned="'+limit+'" StartDate="'+start.toString()+'" EndDate="'+end.toString()+'" />' +
+        '<tns:CalendarView MaxEntriesReturned="'+limit+'" StartDate="'+start.toISOString()+'" EndDate="'+end.toISOString()+'" />' +
         '<tns:ParentFolderIds>' +
           '<t:FolderId Id="'+folderId+'" ChangeKey="'+changeKey+'" />' +
         '</tns:ParentFolderIds>' +
