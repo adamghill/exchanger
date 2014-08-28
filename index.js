@@ -258,7 +258,7 @@ exports.getFolders = function(id, callback) {
   });
 }
 
-exports.getCalendarItems = function(folderName, limit, callback) {
+exports.getCalendarItems = function(folderName, limit, start, end, callback) {
 
 
   var soapRequest =
@@ -306,7 +306,7 @@ exports.getCalendarItems = function(folderName, limit, callback) {
             '<t:FieldURI FieldURI="calendar:End" />' +
           '</t:AdditionalProperties>' +
         '</tns:ItemShape>' +
-        '<tns:CalendarView MaxEntriesReturned="5" StartDate="2013-08-21T17:30:24.127Z" EndDate="2014-09-20T17:30:24.127Z" />' +
+        '<tns:CalendarView MaxEntriesReturned="'+limit+'" StartDate="'+start.toString()+'" EndDate="'+end.toString()+'" />' +
         '<tns:ParentFolderIds>' +
           '<t:FolderId Id="'+folderId+'" ChangeKey="'+changeKey+'" />' +
         '</tns:ParentFolderIds>' +
