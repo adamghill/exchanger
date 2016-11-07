@@ -21,7 +21,7 @@
     "email"
   ],
   "dependencies": {
-  	"soap": "git://github.com/adamghill/node-soap.git",
+    "soap": "https://github.com/adamghill/node-soap.git",
     "moment": "1.6.2",
     "xml2js": "0.1.14",
     "underscore": "1.3.3"
