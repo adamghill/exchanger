@@ -257,3 +257,114 @@ exports.getFolders = function(id, callback) {
     }
   });
 }
+
+exports.getCalendarItems = function(folderName, limit, start, end, callback) {
+
+
+  var soapRequest =
+    '<tns:GetFolder>' +
+      '<tns:FolderShape>' +
+        '<t:BaseShape>IdOnly</t:BaseShape>' +
+      '</tns:FolderShape>' +
+      '<tns:FolderIds>' +
+      '<t:DistinguishedFolderId Id="calendar" />' +
+      '</tns:FolderIds>' +
+    '</tns:GetFolder>'
+
+  exports.client.FindItem(soapRequest, function(err, result, body) {
+    if (err) {
+      console.log("error in exchanger");
+      return callback(err);
+    }
+    
+    var parser = new xml2js.Parser();
+    var folderId;
+    var changeKey;
+
+    parser.parseString(body, function(err, result) {
+      var responseCode = result['s:Body']['m:GetFolderResponse']['m:ResponseMessages']['m:GetFolderResponseMessage']['m:ResponseCode'];
+
+      if (responseCode !== 'NoError') {
+        return callback(new Error(responseCode));
+      }
+
+      var folderItem = result['s:Body']['m:GetFolderResponse']['m:ResponseMessages']['m:GetFolderResponseMessage']['m:Folders']['t:CalendarFolder']['t:FolderId'];
+      folderId = folderItem['@'].Id;
+      changeKey = folderItem['@'].ChangeKey;
+    });
+
+    // First request succeeded and received folderId and changeKey.
+    // Now get calendatrItems
+
+    var soapRequest2 =
+      '<tns:FindItem Traversal="Shallow">' +
+        '<tns:ItemShape>' +
+          '<t:BaseShape>IdOnly</t:BaseShape>' +
+          '<t:AdditionalProperties>' +
+            '<t:FieldURI FieldURI="item:Subject" />' +
+            '<t:FieldURI FieldURI="calendar:Start" />' +
+            '<t:FieldURI FieldURI="calendar:End" />' +
+          '</t:AdditionalProperties>' +
+        '</tns:ItemShape>' +
+        '<tns:CalendarView MaxEntriesReturned="'+limit+'" StartDate="'+start.toISOString()+'" EndDate="'+end.toISOString()+'" />' +
+        '<tns:ParentFolderIds>' +
+          '<t:FolderId Id="'+folderId+'" ChangeKey="'+changeKey+'" />' +
+        '</tns:ParentFolderIds>' +
+      '</tns:FindItem>'
+
+    exports.client.FindItem(soapRequest2, function(err, result, body) {
+      if (err) {
+        console.log("error in exchanger");
+        return callback(err);
+      }
+
+      parser.parseString(body, function(err, result) {
+        var responseCode = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:ResponseCode'];
+        if (responseCode !== 'NoError') {
+        return callback(new Error(responseCode));
+        }
+
+        var rootFolder = result['s:Body']['m:FindItemResponse']['m:ResponseMessages']['m:FindItemResponseMessage']['m:RootFolder'];
+      
+        var calendarItems = [];
+        var rawCalendarItems =[];
+
+        if(rootFolder['t:Items']){
+          if (rootFolder['t:Items']['t:CalendarItem']){
+            rawCalendarItems = rootFolder['t:Items']['t:CalendarItem'];
+            if(Array.isArray(rawCalendarItems)){
+              rawCalendarItems.forEach(function(item, idx) {
+                var itemId = {
+                  id: item['t:ItemId']['@'].Id,
+                  changeKey: item['t:ItemId']['@'].ChangeKey
+                };
+
+                var dateTimeReceived = item['t:DateTimeReceived'];
+
+                calendarItems.push({
+                  exchangeId: itemId,
+                  subject: item['t:Subject'],
+                  start: item['t:Start'],
+                  end: item['t:End']
+                });           
+              });
+            }else{
+              //rawCalendarItems is a single object
+              var itemId = {
+                  id: rawCalendarItems['t:ItemId']['@'].Id,
+                  changeKey: rawCalendarItems['t:ItemId']['@'].ChangeKey
+                };
+              calendarItems.push({
+                exchangeId: itemId,
+                subject: rawCalendarItems['t:Subject'],
+                start: rawCalendarItems['t:Start'],
+                end: rawCalendarItems['t:End']
+              });   
+            }
+          }
+        }
+        callback(null, calendarItems);
+      });
+    });
+  });
+}
